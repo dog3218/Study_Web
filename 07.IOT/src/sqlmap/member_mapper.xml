@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member.mapper">
+  	<select id="login" resultType="member.MemberVO">
+    	select * from jsp_member where id = #{id} and pw = #{pw} 
+ 	</select>
+	
+	<insert id="signup" parameterType="member.MemberVO">
+		insert into jsp_member values(#{id}, #{pw})
+	</insert>
+	
+	  <select id="exam" resultType="exam.ExamVO">
+  		select * from question_answer
+  </select>
+  
+  	<select id ="id_check" resultType="integer">
+ 		select count(*) from jsp_member where id = #{id} 	
+  	</select>
+  	
+  	<insert id="join">
+  		insert into jsp_member ( name, id, pw, email, gender)
+  						values ( #{NAME} , #{ID}, #{PW}, #{EMAIL}, #{GENDER})
+  	</insert>
+  	
+</mapper>

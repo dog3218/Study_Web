@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board.mapper">
+  	<select id="list" resultType="board.BoardVO">
+    	select * from
+      (select rownum no , b.*
+      from (select * from jsp_board <include refid="search_where"></include>) b
+      order by no desc)
+      where no between #{beginList} and #{endList}
+      
+ 	</select>
+ 	
+  	<select id="totalList" resultType="Integer">
+    	select count(*) from jsp_Board
+    	<include refid="search_where"></include>
+ 	</select>
+ 	
+ 	<select id="select" resultType="board.BoardVO">
+ 		select * from jsp_board where id = #{id}
+ 	</select>
+ 	<insert id="insert">
+ 		insert into jsp_board(id, title, content, writter)
+ 		values(#{id}, #{title}, #{content}, #{writter} )
+ 	</insert>
+ 	<!-- sql문을 따로 만들고 조건에 따라 where 조건이 바뀔수 있게 
+ 	mybatis mapper에서는 include 기능을 사용해서 처리할 수 있다.
+ 	-->
+ 	<sql id="search_where">
+ 		<if test="search == 'title' or search=='content'">
+ 			where ${search} like '%'||#{keyword} || '%'
+ 		</if>
+ 		<if test="search == 'all'">
+ 			where title like '%'||#{keyword} || '%'
+ 			or content like '%'||#{keyword} || '%'
+ 			or writter like '%'||#{keyword} || '%'
+ 			<!--in (select id from jsp_member where name like '%'||#{keyword} || '%'  -->
+ 		</if>
+ 		<if test="search == 'writer'">
+ 			where writter like '%'||#{keyword} || '%'
+ 		</if>
+ 		
+ 		
+ 	</sql>
+ 	<!--$붙이면 ''가 안붙음, #붙이면 ''가 붙는 차이 
+ 			오라클 프로시저 -->
+</mapper>
